@@ -1,16 +1,18 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PropagateLoader from 'react-spinners/PropagateLoader'
 import { Route, Switch } from 'react-router-dom'
-import EmployeeList from '../src/components/EmployeeList/EmployeeList'
+import EmployeeList from './components/EmployeeList/EmployeeList'
 
 export default function App() {
     const [loading, setLoading] = useState(false);
+
     useEffect(() => {
         setLoading(true);
         setTimeout(() => {
             setLoading(false);
         }, 5000);
     }, []);
+
     return (
         <div className="conatiner-fluid">
             {
