@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import PropagateLoader from 'react-spinners/PropagateLoader'
 import { Route, Switch } from 'react-router-dom'
 import EmployeeList from './components/EmployeeList/EmployeeList'
+import '../src/style/loader.css'
 
 export default function App() {
     const [loading, setLoading] = useState(false);
