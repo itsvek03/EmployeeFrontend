@@ -6,8 +6,9 @@ import Control from "./Controls";
 import { getEmployeeAction, updateActionByid, postEmployeeAction } from '../../actions/EmployeeActions'
 import { POST_REQUEST, UPDATE_REQUEST } from '../../actions/EmployeeConstant'
 import PropagateLoader from 'react-spinners/PropagateLoader'
+import { Typography } from "@material-ui/core";
 
-const Container = ({ closeFun, isEdit, initVals, compId }) => {
+const Container = ({ isEdit, initVals, compId }) => {
     const StateList = [
         {
             key: "Maharashtra",
@@ -33,7 +34,6 @@ const Container = ({ closeFun, isEdit, initVals, compId }) => {
 
     let initialValues = {};
 
-    //if isEdit set to true then set initialValues to provided data
     if (isEdit) {
         initialValues = initVals;
     } else {
@@ -62,8 +62,8 @@ const Container = ({ closeFun, isEdit, initVals, compId }) => {
         Email: Yup.string()
             .email("Invalid Email format")
             .required('This field is required'),
-        State: Yup.string(),
-        City: Yup.string(),
+        State: Yup.string().required('This field is required'),
+        City: Yup.string().required('This field is required'),
         LogoImage: Yup.mixed()
             .required('This field is required'),
     });
@@ -76,7 +76,7 @@ const Container = ({ closeFun, isEdit, initVals, compId }) => {
 
     const {
         loading: putLoading,
-        //success: putSuccess,
+
         error: putError,
     } = useSelector((state) => state.updateEmployeeReducer);
 
@@ -93,7 +93,7 @@ const Container = ({ closeFun, isEdit, initVals, compId }) => {
         d.append('City', values.City)
         d.append('LogoImage', values.LogoImage)
 
-        //if update request
+
         if (isEdit) {
             dispatch(updateActionByid(compId, d));
         } else {
@@ -102,13 +102,13 @@ const Container = ({ closeFun, isEdit, initVals, compId }) => {
         dispatch(getEmployeeAction());
     };
 
-    //clear previous data
+
     useEffect(() => {
         dispatch({ type: POST_REQUEST });
         dispatch({ type: UPDATE_REQUEST });
     }, [dispatch]);
 
-    //in Edit Mode get State & set the city accordingly
+
     useEffect(() => {
         if (initVals) {
             if (initVals.State) {
@@ -124,7 +124,7 @@ const Container = ({ closeFun, isEdit, initVals, compId }) => {
             validationSchema={validationSchema}
             onSubmit={onSubmit}
         >
-            {(formik, isSubmitting, touched, errors, values) => (
+            {(formik, isSubmitting) => (
                 <Form>
                     {(loading || putLoading) &&
                         <div className="m-2 d-flex justify-content-center">
@@ -132,8 +132,8 @@ const Container = ({ closeFun, isEdit, initVals, compId }) => {
                         </div>
 
                     }
-                    {(error || putError) && <h1>WRONG</h1>}
-                    {/* {(success || putSuccess) && closeFun()} */}
+                    {(error || putError) && (<Typography variant="h5" color="secondary" className="text-center lead mt-3">Something went wrong</Typography>)}
+
                     <div className="form-group">
 
 

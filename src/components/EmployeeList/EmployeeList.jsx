@@ -5,10 +5,8 @@ import { useTable, useSortBy, useGlobalFilter, usePagination } from 'react-table
 import { getEmployeeAction } from '../../actions/EmployeeActions'
 import { FcAlphabeticalSortingAz } from "react-icons/fc"
 import { FcAlphabeticalSortingZa } from "react-icons/fc"
-
 import GlobalFilter from './GlobalFilter'
 import PropagateLoader from 'react-spinners/PropagateLoader'
-
 import { FcNext } from "react-icons/fc"
 import { FcPrevious } from "react-icons/fc"
 import { POST_REQUEST, UPDATE_REQUEST } from '../../actions/EmployeeConstant'
@@ -29,20 +27,22 @@ export default function EmployeeList() {
     };
 
     const COLUMNS = useRef([
-        // {
-        //     Header: "LOGO",
-        //     accessor: "LogoImage",
-        //     Cell: ({ cell }) => (
-        //         <Image
-        //             src={cell.row.values.LogoImage}
-        //             alt={cell.row.values.name}
-        //             width={100}
-        //             height={100}
-        //             fluid
-        //             rounded
-        //         />
-        //     ),
-        // },
+        {
+            Headers: "LOGO",
+            accessor: "LogoImage",
+            Cell: ({ row }) => (
+                <Image
+                    src={row.original.LogoImage}
+                    alt={row.original.name}
+                    width={50}
+                    height={50}
+                    fluid
+                    rounded
+                    thumbnail
+                />
+            ),
+        },
+
         {
             Headers: 'COMPANY',
             accessor: 'CompanyName'
@@ -78,12 +78,14 @@ export default function EmployeeList() {
         },
 
 
+
     ])
 
 
     const dispatch = useDispatch();
     var empdata = useSelector(state => state.EmployeeReducer)
     console.log("EMPDATA", empdata)
+
 
 
     const { loading, error, employee } = empdata
@@ -108,7 +110,7 @@ export default function EmployeeList() {
     const newcolumns = useMemo(() => COLUMNS.current, [
         COLUMNS,
     ]);
-    // const data = useMemo(() => (compData ? compData : []), [compData]);
+
     const tableinstance = useTable({
         columns: newcolumns,
         data: employee,
@@ -136,7 +138,7 @@ export default function EmployeeList() {
         <>
             <ModalDialog showFlag={show} handleClose={closeModalBox} />
 
-            {/* For Edit */}
+
             <ModalDialog
                 showFlag={editModal}
                 isEdit={true}
@@ -152,7 +154,7 @@ export default function EmployeeList() {
                         <GlobalFilter filter={globalFilter} setfilter={setGlobalFilter} />
                     </div>
                     <div className="col-md-2">
-                        <button type="button" className="btn btn-primary mt-4" onClick={() => {
+                        <button type="button" className="btn btn-primary btn-lg btn-block mt-4" onClick={() => {
                             openModalBox();
                         }}>Add</button>
                     </div>
@@ -163,18 +165,18 @@ export default function EmployeeList() {
                         </div>)
                     }
                     {
-                        (error) && (<Typography variant="h5" color="secondary" className="text-center">Something went wrong</Typography>)
+                        (error) && (<Typography variant="h5" color="secondary" className="text-center lead mt-3">Something went wrong</Typography>)
                     }
 
                     {
                         employee.length === 0 ?
-                            <Typography variant="h3" color="secondary" className="text-center">NO DATA</Typography>
+                            <Typography variant="h5" color="secondary" className="text-center lead mt-2">No data is available</Typography>
                             :
                             <div className="container-fluid table-responsive mt-3 mb-3">
                                 <div className="card">
 
                                     <div className="card-body">
-                                        <table className="table table-hover table-bordered" {...getTableProps()}>
+                                        <table className="table  table-hover table-bordered table-responsive" {...getTableProps()}>
                                             <thead className="table-primary">
                                                 {
                                                     headerGroups.map((headerGroup) => (
@@ -219,21 +221,20 @@ export default function EmployeeList() {
                                     </div>
                                 </div>
 
-                                <div className="container-fluid" style={{ border: '2px solid red' }}>
+                                <div className="container-fluid">
                                     <div className="row">
-                                        <div className="col-md-12">
+                                        <div className="col-md-12 d-flex justify-content-end">
 
 
-                                            <div className="form-group">
-                                                <span className="lead col-md-2">
-                                                    <label className="lead">Page {'  '}</label>
-                                                    <label className="lead m-2">
-                                                        {pageIndex + 1} of {pageOptions.length}
-                                                    </label>
-                                                </span>
+                                            <span>
+                                                <label className="lead">Page {'  '}</label>
+                                                <label className="lead m-2">
+                                                    {pageIndex + 1} of {pageOptions.length}
+                                                </label>
+                                            </span>
 
 
-
+                                            <div className="mt-1">
                                                 <span className="form-group">
                                                     <select value={pageSize} onChange={e => setPageSize(Number(e.target.value))} className="m-2" >
                                                         {
@@ -245,48 +246,44 @@ export default function EmployeeList() {
                                                         }
                                                     </select>
                                                 </span>
-
-
-                                                <div>
-                                                    <span>
-                                                        <small>Go to Page : {' '}</small>
-                                                        <input
-                                                            type="number"
-                                                            defaultValue={pageIndex + 1}
-                                                            className="form-group col-md-2 m-2"
-                                                            onChange={(e) => {
-                                                                const pageNumber = e.target.value ? Number(e.target.value) - 1 : 0
-                                                                gotoPage(pageNumber)
-                                                            }}
-
-                                                        />
-                                                    </span>
-
-                                                </div>
-
-
-                                                <button
-                                                    type="button"
-                                                    className="btn btn-sm"
-                                                    onClick={() => gotoPage(0)} disabled={!canPreviousPage}
-                                                >
-                                                    <FcPrevious />
-
-                                                </button>
-                                                <button type="button" className="btn btn-primary btn-sm m-2" onClick={() => previousPage()} disabled={!canPreviousPage}>Previous</button>
-                                                <button type="button" className="btn btn-primary btn-sm m-2" onClick={() => nextPage()} disabled={!canNextPage}>Next</button>
-                                                <button type="button"
-                                                    className="btn btn-sm"
-                                                    onClick={() => gotoPage(pageCount - 1)}
-                                                    disabled={!canNextPage}
-                                                >
-                                                    <FcNext />
-                                                </button>
                                             </div>
+
+
+                                            <div>
+                                                <span>
+                                                    <small>Go to Page : {' '}</small>
+                                                    <input
+                                                        type="number"
+                                                        defaultValue={pageIndex + 1}
+                                                        className="form-group mt-2"
+                                                        onChange={(e) => {
+                                                            const pageNumber = e.target.value ? Number(e.target.value) - 1 : 0
+                                                            gotoPage(pageNumber)
+                                                        }}
+
+                                                    />
+                                                </span>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                className="btn btn-sm"
+                                                onClick={() => gotoPage(0)} disabled={!canPreviousPage}
+                                            >
+                                                <FcPrevious />
+
+                                            </button>
+                                            <button type="button" className="btn btn-primary btn-sm m-2" onClick={() => previousPage()} disabled={!canPreviousPage}>Previous</button>
+                                            <button type="button" className="btn btn-primary btn-sm m-2" onClick={() => nextPage()} disabled={!canNextPage}>Next</button>
+                                            <button type="button"
+                                                className="btn btn-sm"
+                                                onClick={() => gotoPage(pageCount - 1)}
+                                                disabled={!canNextPage}
+                                            >
+                                                <FcNext />
+                                            </button>
                                         </div>
+
                                     </div>
-
-
                                 </div>
                             </div>
                     }
