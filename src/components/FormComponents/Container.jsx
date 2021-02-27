@@ -51,7 +51,7 @@ const Container = ({ isEdit, initVals, compId }) => {
 
     const validationSchema = Yup.object({
         Contact: Yup.string()
-            .matches(/\d{10}/, "Contact No. Can Be Of 10 Digits Only")
+            .matches(/\d{10}/, "There should be 10 digits")
             .required("Required!"),
         CompanyName: Yup.string()
             .min(5, "It must contain 5 characters")

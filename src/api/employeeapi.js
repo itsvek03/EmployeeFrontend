@@ -18,7 +18,13 @@ export const postEmployeeapi = (data) => {
 }
 
 export const getEmployeeByidapi = (id) => {
-    return axios.get(`http://localhost:8000/api/v1/employee/${id}`, config)
+    if (id === 0) {
+        return null
+    }
+    else {
+        return axios.get(`http://localhost:8000/api/v1/employee/${id}`, config)
+    }
+
 }
 
 export const UpdateEmployeeapi = (id, data) => {

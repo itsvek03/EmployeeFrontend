@@ -36,6 +36,7 @@ export const getEmployeeAction = () => {
             })
         }
         catch (err) {
+            console.log(err)
             dispatch({
                 type: EMPLOYEE_FAIL,
                 payload: err
